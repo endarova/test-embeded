@@ -2,8 +2,13 @@
     "name": "node-ex-website",
     "version": "1.0.0",
     "description": "",
+
+    "engines": {
+        "node": "16.x"
+      },
     "scripts": {
         "start": "node server.js"
+        
     },
     "dependencies": {
         "cors": "^2.8.5",

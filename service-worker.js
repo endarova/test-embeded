@@ -1,1 +1,0 @@
-self.importScripts(`https://downloads.getfiddler.be/jam-embedded/fje-service-worker.js`);
