@@ -1,0 +1,156 @@
+<html lang="en">
+    <head>
+        <meta charset='utf-8'>
+        <meta name='viewport' content='width=device-width,initial-scale=1'>
+    
+        <title>Fiddler Jam Embedded</title>
+
+        <script src="https://downloads.getfiddler.be/jam-embedded/fiddler-jam-embedded.js"></script>
+        <script>
+            const jam = window._fiddlerJamEmbedded;
+            jam.init({
+                apiKey: '448678937e625cccfb29aac55f2fc32eb72762ff65aa0314d871c2224c8b1634bbd970dafdaf7742914a5723ff675cb0'
+            });
+            let captureInfo = '';
+            let captureOptions = {
+                captureVideo: true,
+                captureScreenshots: true,
+                captureStorage: true,
+                captureConsole: true,
+                reloadPage: true
+            };
+
+            function getCaptureInfo(jamState) {
+                switch (jamState) {
+                    case 'ready':
+                    case 'initialized':
+                        return 'Ready to capture..';
+                    case 'starting':
+                        return 'Starting..';
+                    case 'started':
+                        return 'Started..';
+                    case 'stopped':
+                        return 'Stopped..';
+                    case 'sharing':
+                        return 'Sharing..';
+                    case 'shared':
+                        return 'Sharing complete! Jam Session Url copied to clipboard.';
+                    default:
+                        return '';
+                }
+            }
+
+            function updateCaptureInfo() {
+                captureInfo = getCaptureInfo(jam.state);
+                document.getElementById('capture-info').innerHTML = captureInfo;
+                if (jam.options) {
+                    captureOptions = jam.options;
+                }
+                document.getElementById('captureVideo').checked = captureOptions.captureVideo;
+                document.getElementById('captureScreenshots').checked = captureOptions.captureScreenshots;
+                document.getElementById('captureStorage').checked = captureOptions.captureStorage;
+                document.getElementById('captureLogs').checked = captureOptions.captureConsole;
+            }
+
+            function initSettingsEvents() {
+                document.getElementById('captureVideo').addEventListener('change', (e) => {
+                    captureOptions.captureVideo = e.target.checked;
+                });
+                document.getElementById('captureScreenshots').addEventListener('change', (e) => {
+                    captureOptions.captureScreenshots = e.target.checked;
+                });
+                document.getElementById('captureStorage').addEventListener('change', (e) => {
+                    captureOptions.captureStorage = e.target.checked;
+                });
+                document.getElementById('captureLogs').addEventListener('change', (e) => {
+                    captureOptions.captureConsole = e.target.checked;
+                });
+            }
+
+            window.addEventListener('load', () => {
+                updateCaptureInfo();
+                jam.addStateChangedEventListener(newState => {
+                    updateCaptureInfo();
+                });
+                initSettingsEvents();
+            });
+
+            async function start() {
+                await jam.start(captureOptions);
+            }
+
+            async function stop() {
+                await jam.stop();
+            }
+
+            async function share() {
+                const jamShareUrl = await jam.share();
+                document.getElementById('jam-share-url').innerHTML = jamShareUrl;
+                await navigator.clipboard.writeText(jamShareUrl);
+            }
+
+            function testConsoleLogs() {
+                const someObject = { 'test': 'test' };
+                console.log('log', someObject);
+                console.info('info', someObject);
+                console.warn('warning', someObject);
+                console.error('error', someObject);
+            }
+
+            function testUncaughtError() {
+                throw new Error('uncaught error');
+            }
+
+            function testWebsockets() {
+                const ws = new WebSocket('wss://demo.piesocket.com/v3/channel_1?api_key=oCdCMcMPQpbvNjUIzqtvF1d2X2okWpDQj4AwARJuAgtjhzKxVEjQU6IdCjwm&notify_self');
+                setTimeout(() => {
+                    ws.send('test message');
+                    setTimeout(() => {
+                        ws.close();
+                    }, 2000);
+                }, 1000);
+            }
+        </script>
+    </head>
+    
+    <body>
+        <h1>Fiddler Jam Embedded</h1>
+        <div>
+            <div>
+                <div>
+                    <input type="checkbox" id="captureVideo" name="captureVideo" />
+                    <label for="captureVideo">Capture Video</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="captureScreenshots" name="captureScreenshots" />
+                    <label for="captureScreenshots">Capture Screenshots</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="captureStorage" name="captureStorage" />
+                    <label for="captureStorage">Capture Storage</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="captureLogs" name="captureLogs" />
+                    <label for="captureLogs">Capture Logs</label>
+                </div>
+            </div>
+
+            <br />
+            
+            <div>
+                <button onclick="start()">Start Capture</button>
+                <button onclick="stop()">Stop Capture</button>
+                <button onclick="share()">Share</button>
+            </div>
+            
+            <div>
+                <button onclick="testConsoleLogs()">Test Logs</button>
+                <button onclick="testUncaughtError()">Test Error</button>
+                <button onclick="testWebsockets()">Test Websockets</button>
+            </div>
+            
+            <div id="capture-info"></div>
+            <div id="jam-share-url"></div>
+        </div>
+    </body>
+</html>
