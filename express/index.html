@@ -101,6 +101,14 @@
                 throw new Error('uncaught error');
             }
 
+            function httpGet(theUrl)
+            {
+                var xmlHttp = new XMLHttpRequest();
+                xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
+                xmlHttp.send( null );
+                return xmlHttp.responseText;
+            }
+
             function testWebsockets() {
                 const ws = new WebSocket('wss://demo.piesocket.com/v3/channel_1?api_key=oCdCMcMPQpbvNjUIzqtvF1d2X2okWpDQj4AwARJuAgtjhzKxVEjQU6IdCjwm&notify_self');
                 setTimeout(() => {
@@ -147,6 +155,7 @@
                 <button onclick="testConsoleLogs()">Test Logs</button>
                 <button onclick="testUncaughtError()">Test Error</button>
                 <button onclick="testWebsockets()">Test Websockets</button>
+                <button onclick="httpGet('http\:\/\/httpbin.org')">Test GET</button>
             </div>
             
             <div id="capture-info"></div>
