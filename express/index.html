@@ -9,7 +9,7 @@
         <script>
             const jam = window._fiddlerJamEmbedded;
             jam.init({
-                apiKey: '73b578fb3f34e3fc1a0313ce97930a0cb36fbdb9947501dc9e8453ab2fc8a53fdc9620c81256f049af431e6c26e4f513'
+                apiKey: '4f41a690f6fa4e2c13deb72e7d42bb30da80edc273642b17fa10983f02404a3535e6401ea241954087029ccf917d27e9'
             });
             let captureInfo = '';
             let captureOptions = {
@@ -109,6 +109,15 @@
                 return xmlHttp.responseText;
             }
 
+            function post () {
+                var form = document.createElement('form');
+                form.setAttribute('method', 'post');
+                form.setAttribute('action', 'http://google.com');
+                form.style.display = 'hidden';
+                document.body.appendChild(form)
+                form.submit();
+            }
+
             function testWebsockets() {
                 const ws = new WebSocket('wss://demo.piesocket.com/v3/channel_1?api_key=oCdCMcMPQpbvNjUIzqtvF1d2X2okWpDQj4AwARJuAgtjhzKxVEjQU6IdCjwm&notify_self');
                 setTimeout(() => {
@@ -156,6 +165,7 @@
                 <button onclick="testUncaughtError()">Test Error</button>
                 <button onclick="testWebsockets()">Test Websockets</button>
                 <button onclick="httpGet('http\:\/\/www.example.com')">Test GET</button>
+                <button onclick="post()">Test POST</button>
             </div>
             
             <div id="capture-info"></div>
