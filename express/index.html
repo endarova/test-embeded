@@ -104,7 +104,7 @@
             function httpGet(theUrl)
             {
                 var xmlHttp = new XMLHttpRequest();
-                xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
+                xmlHttp.open( "GET", theUrl, true ); // false for synchronous request
                 xmlHttp.send( null );
                 return xmlHttp.responseText;
             }
@@ -164,7 +164,7 @@
                 <button onclick="testConsoleLogs()">Test Logs</button>
                 <button onclick="testUncaughtError()">Test Error</button>
                 <button onclick="testWebsockets()">Test Websockets</button>
-                <button onclick="httpGet('https\:\/\/www.example.com')">Test GET</button>
+                <button onclick="httpGet('https\:\/\/httpbin.org/')">Test GET</button>
                 <button onclick="post()">Test POST</button>
             </div>
             
